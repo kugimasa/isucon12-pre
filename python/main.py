@@ -477,15 +477,26 @@ def tenants_billing_handler():
         # tenant_db = connect_to_tenant_db(int(tenant_row.id))
         # テナントDBのキャッシュを使用
         tenant_db = tenant_dbs[str(tenant_row.id)]
-        competition_rows = tenant_db.execute("SELECT * FROM competition WHERE tenant_id=?", tenant_row.id).fetchall()
 
-        for competition_row in competition_rows:
-            report = billing_report_by_competition(tenant_db, tenant_row.id, competition_row.id)
-            tenant_billing.billing += report.billing_yen
-        tenant_billings.append(tenant_billing)
+        # テナントDBのロックを取得する
+        lock_file = flock_by_tenant_id(tenant_row.id)
+        if not lock_file:
+            raise RuntimeError("error flock_by_tenant_id")
 
-        if len(tenant_billings) >= 10:
-            break
+        try:
+            competition_rows = tenant_db.execute("SELECT * FROM competition WHERE tenant_id=?", tenant_row.id).fetchall()
+
+            for competition_row in competition_rows:
+                report = billing_report_by_competition(tenant_db, tenant_row.id, competition_row.id)
+                tenant_billing.billing += report.billing_yen
+            tenant_billings.append(tenant_billing)
+
+            if len(tenant_billings) >= 10:
+                break
+
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+            lock_file.close()
 
     return jsonify(SuccessResult(status=True, data={"tenants": tenant_billings}))
 
