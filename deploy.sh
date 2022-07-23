@@ -2,7 +2,7 @@ echo "[MySQLのクエリログの退避]"
 
 DATE=`TZ=JST-9 date '+%d%H%M%S'`
 if sudo [ -e /var/log/mysql/slow.log ]; then
-    sudo mv /var/log/mysql/slow.log /var/log/mysql/slow${DATE}.log
+    sudo mv /var/log/mysql/slow.log /var/log/mysql/slow_${DATE}.log
     echo "[change log name success /var/log/mysql/slow${DATE}.log]"
 else
     echo "[there is no mysql query log file]"
