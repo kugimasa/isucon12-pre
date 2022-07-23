@@ -452,7 +452,7 @@ def tenants_billing_handler():
     #     scoreが登録されていないplayerでアクセスした人 * 10
     #   を合計したものを
     # テナントの課金とする
-    tenant_rows = admin_db.execute("SELECT * FROM tenant ORDER BY id DESC").fetchall()
+    tenant_rows = admin_db.execute("SELECT * FROM tenant ORDER BY id DESC limit 20").fetchall()
     tenant_billings = []
     for tenant_row in tenant_rows:
         if before_id != 0 and before_id <= tenant_row.id:
