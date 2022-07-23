@@ -55,8 +55,9 @@ def tenant_db_path(id: int) -> str:
 def connect_to_tenant_db(id: int) -> Engine:
     """テナントDBに接続する"""
     path = tenant_db_path(id)
-    engine = create_engine(f"sqlite:///{path}")
-    return initialize_sql_logger(engine)
+    return create_engine(f"sqlite:///{path}")
+    # engine = create_engine(f"sqlite:///{path}")
+    # return initialize_sql_logger(engine)
 
 # 一度に全てのtenant_dbを取得
 def fetch_all_tenant_db():
