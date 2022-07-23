@@ -75,7 +75,6 @@ def dispense_id() -> str:
         try:
             res = admin_db.execute("REPLACE INTO id_generator (stub) VALUES (%s)", "a")
             id = res.lastrowid
-            print("dispense_id()" + id)
             if id != 0:
                 return hex(id)[2:]
         except OperationalError as e:  # deadlock
