@@ -73,6 +73,8 @@ def create_tenant_db(id: int):
     command = f"sqlite3 {path} < {TENANT_DB_SCHEMA_FILE_PATH}"
     subprocess.run(["bash", "-c", command])
 
+    #enginesに追加
+    tenant_dbs[str(id)] = connect_to_tenant_db(id)
 
 def dispense_id() -> str:
     """システム全体で一意なIDを生成する"""
@@ -473,6 +475,7 @@ def tenants_billing_handler():
             id=str(tenant_row.id), name=tenant_row.name, display_name=tenant_row.display_name, billing=0
         )
         # tenant_db = connect_to_tenant_db(int(tenant_row.id))
+        # テナントDBのキャッシュを使用
         tenant_db = tenant_dbs[str(tenant_row.id)]
         competition_rows = tenant_db.execute("SELECT * FROM competition WHERE tenant_id=?", tenant_row.id).fetchall()
 
