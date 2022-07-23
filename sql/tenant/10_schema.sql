@@ -11,6 +11,8 @@ CREATE TABLE competition (
   updated_at BIGINT NOT NULL
 );
 
+create index id_tenant_id_index on competition(id, tenant_id); 
+
 CREATE TABLE player (
   id VARCHAR(255) NOT NULL PRIMARY KEY,
   tenant_id BIGINT NOT NULL,
