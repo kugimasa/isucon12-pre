@@ -474,7 +474,7 @@ def tenants_billing_handler():
             id=str(tenant_row.id), name=tenant_row.name, display_name=tenant_row.display_name, billing=0
         )
         # tenant_db = connect_to_tenant_db(int(tenant_row.id))
-        tenant_db = tenant_dbs[int(tenant_rows.id)]
+        tenant_db = tenant_dbs[int(tenant_row.id)]
         competition_rows = tenant_db.execute("SELECT * FROM competition WHERE tenant_id=?", tenant_row.id).fetchall()
 
         for competition_row in competition_rows:
