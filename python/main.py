@@ -63,7 +63,7 @@ def fetch_all_tenant_db():
     engines = []
     for i in range(1, 101):
         engine = connect_to_tenant_db(i)
-        engines.add(engine)
+        engines.append(engine)
     return engines
 
 
