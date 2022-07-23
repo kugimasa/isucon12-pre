@@ -453,7 +453,7 @@ def tenants_billing_handler():
     #   を合計したものを
     # テナントの課金とする
     if before_id != 0:
-        tenant_rows = admin_db.execute("SELECT * FROM tenant where id < ? ORDER BY id DESC limit 10", before_id).fetchall()
+        tenant_rows = admin_db.execute("SELECT * FROM tenant where id < %s ORDER BY id DESC limit 10", before_id).fetchall()
     else:
         tenant_rows = admin_db.execute("SELECT * FROM tenant ORDER BY id DESC limit 10").fetchall()
     tenant_billings = []
