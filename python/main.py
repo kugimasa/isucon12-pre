@@ -60,7 +60,7 @@ def connect_to_tenant_db(id: int) -> Engine:
 
 # 一度に全てのtenant_dbを取得
 def fetch_all_tenant_db() -> Engine[]:
-    for i in range(100):
+    for i in range(1, 101):
         engine = connect_to_tenant_db(i)
         engines.add(engine)
     return engines
