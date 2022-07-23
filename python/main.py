@@ -500,7 +500,7 @@ def players_list_handler():
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     rows = tenant_db.execute(
         "SELECT * FROM player WHERE tenant_id=? ORDER BY created_at DESC",
@@ -530,7 +530,7 @@ def players_add_handler():
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     display_names = request.values.getlist("display_name[]")
 
@@ -572,7 +572,7 @@ def player_disqualified_handler(player_id: str):
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     now = int(datetime.now().timestamp())
 
@@ -616,7 +616,7 @@ def competitions_add_handler():
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     title = request.values.get("title")
 
@@ -651,7 +651,7 @@ def competition_finish_handler(competition_id: str):
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     competition = retrieve_competition(tenant_db, competition_id)
     if not competition:
@@ -679,7 +679,7 @@ def competition_score_handler(competition_id: str):
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     competition = retrieve_competition(tenant_db, competition_id)
     if not competition:
@@ -764,7 +764,7 @@ def billing_handler():
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     competition_rows = tenant_db.execute(
         "SELECT * FROM competition WHERE tenant_id=? ORDER BY created_at DESC",
@@ -791,7 +791,7 @@ def organizer_competitions_handler():
     if viewer.role != ROLE_ORGANIZER:
         abort(403, "role organizer required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     return competitions_handler(viewer, tenant_db)
 
@@ -812,7 +812,7 @@ def player_handler(player_id: str):
     if viewer.role != ROLE_PLAYER:
         abort(403, "role player required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     authorize_player(tenant_db, viewer.player_id)
 
@@ -886,7 +886,7 @@ def competition_ranking_handler(competition_id):
     if viewer.role != ROLE_PLAYER:
         abort(403, "role player required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     authorize_player(tenant_db, viewer.player_id)
 
@@ -993,7 +993,7 @@ def player_competitions_handler():
     if viewer.role != ROLE_PLAYER:
         abort(403, "role player required")
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
 
     authorize_player(tenant_db, viewer.player_id)
 
@@ -1047,7 +1047,7 @@ def me_handler():
             )
         )
 
-    tenant_db = connect_to_tenant_db(viewer.tenant_id)
+    tenant_db = tenant_dbs[str(viewer.tenant_id)]
     player = retrieve_player(tenant_db, viewer.player_id)
     if not player:
         jsonify(
