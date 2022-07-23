@@ -59,7 +59,7 @@ def connect_to_tenant_db(id: int) -> Engine:
     return initialize_sql_logger(engine)
 
 # 一度に全てのtenant_dbを取得
-def fetch_all_tenant_db() -> Engine[]:
+def fetch_all_tenant_db():
     for i in range(1, 101):
         engine = connect_to_tenant_db(i)
         engines.add(engine)
@@ -104,7 +104,7 @@ def run():
     admin_db = connect_admin_db()
 
     global tenant_dbs
-    tenand_dbs = fetch_all_tenant_db()
+    tenant_dbs = fetch_all_tenant_db()
 
     app.run(host="0.0.0.0", port=3000, debug=True, threaded=True)
 
@@ -472,7 +472,8 @@ def tenants_billing_handler():
         tenant_billing = TenantWithBilling(
             id=str(tenant_row.id), name=tenant_row.name, display_name=tenant_row.display_name, billing=0
         )
-        tenant_db = connect_to_tenant_db(int(tenant_row.id))
+        # tenant_db = connect_to_tenant_db(int(tenant_row.id))
+        tenant_db = tenant_dbs[int(tenant_rows.id)]
         competition_rows = tenant_db.execute("SELECT * FROM competition WHERE tenant_id=?", tenant_row.id).fetchall()
 
         for competition_row in competition_rows:
