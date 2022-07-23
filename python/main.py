@@ -58,6 +58,13 @@ def connect_to_tenant_db(id: int) -> Engine:
     engine = create_engine(f"sqlite:///{path}")
     return initialize_sql_logger(engine)
 
+# 一度に全てのtenant_dbを取得
+def fetch_all_tenant_db() -> Engine[]:
+    for i in range(100):
+        engine = connect_to_tenant_db(i)
+        engines.add(engine)
+    return engines
+
 
 def create_tenant_db(id: int):
     """テナントDBを新規に作成する"""
@@ -95,6 +102,9 @@ def add_header(response):
 def run():
     global admin_db
     admin_db = connect_admin_db()
+
+    global tenant_dbs
+    tenand_dbs = fetch_all_tenant_db()
 
     app.run(host="0.0.0.0", port=3000, debug=True, threaded=True)
 
