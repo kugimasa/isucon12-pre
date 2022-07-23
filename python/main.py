@@ -491,12 +491,12 @@ def tenants_billing_handler():
                 tenant_billing.billing += report.billing_yen
             tenant_billings.append(tenant_billing)
 
-            if len(tenant_billings) >= 10:
-                break
-
         finally:
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
             lock_file.close()
+
+            if len(tenant_billings) >= 10:
+                break
 
     return jsonify(SuccessResult(status=True, data={"tenants": tenant_billings}))
 
