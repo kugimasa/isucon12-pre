@@ -6,8 +6,9 @@ from sqlalchemy.engine import Engine
 
 
 def initialize_sql_logger(engine: Engine) -> Engine:
-
-    # trace_file_path = os.getenv("ISUCON_SQLITE_TRACE_FILE")
+    # TODO 後で消す
+    return engine
+    trace_file_path = os.getenv("ISUCON_SQLITE_TRACE_FILE")
     if not trace_file_path:
         return engine
 
